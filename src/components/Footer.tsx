@@ -70,15 +70,15 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex gap-3">
                 <MapPin size={20} className="text-primary-500 flex-shrink-0" />
-                <span className="text-sm">Gedung Al-Ghazali Lt. 3<br />Jl. Pendidikan Halal No. 123<br />Jakarta Selatan, 12345</span>
+                <span className="text-sm">Jl. Kemerdekaan Barat No.12,<br />Kesugihan, Cilacap,<br />Jawa Tengah 53274</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={20} className="text-primary-500 flex-shrink-0" />
-                <span className="text-sm">+62 21 1234 5678</span>
+                <span className="text-sm">+62 813-2778-2079</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={20} className="text-primary-500 flex-shrink-0" />
-                <span className="text-sm">info@lphalghazali.id</span>
+                <span className="text-sm">lph@unugha.ac.id</span>
               </li>
             </ul>
           </div>
