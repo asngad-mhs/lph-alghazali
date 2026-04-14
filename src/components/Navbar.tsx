@@ -14,10 +14,14 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: 'Beranda', href: '#' },
-    { name: 'Tentang Kami', href: '#about' },
-    { name: 'Layanan', href: '#services' },
-    { name: 'Keunggulan', href: '#features' },
+    { name: 'Home', href: '#' },
+    { name: 'Layanan Kami', href: '#services' },
+    { name: 'Profil', href: '#about' },
+    { name: 'Proses Sertifikat', href: '#proses' },
+    { name: 'Regulasi', href: '#regulasi' },
+    { name: 'Fatwa MUI', href: '#fatwa' },
+    { name: 'Berita', href: '#berita' },
+    { name: 'FAQ', href: '#faq' },
     { name: 'Kontak', href: '#contact' },
   ];
 
@@ -45,12 +49,12 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-4 xl:space-x-5">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className={`font-medium text-sm hover:text-gold-500 transition-colors ${
+                className={`font-medium text-xs xl:text-sm hover:text-gold-500 transition-colors ${
                   isScrolled ? 'text-stone-600' : 'text-stone-600 lg:text-white/90'
                 }`}
               >
@@ -66,7 +70,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`${isScrolled ? 'text-stone-800' : 'text-primary-900'}`}
@@ -79,7 +83,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-stone-100 shadow-xl absolute w-full left-0 top-full">
+        <div className="lg:hidden bg-white border-t border-stone-100 shadow-xl absolute w-full left-0 top-full">
           <div className="px-4 pt-2 pb-6 space-y-1">
             {navLinks.map((link) => (
               <a
