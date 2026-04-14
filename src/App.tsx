@@ -7,6 +7,11 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
 import Services from './components/Services';
+import ProsesSertifikasi from './components/ProsesSertifikasi';
+import Regulasi from './components/Regulasi';
+import FatwaMUI from './components/FatwaMUI';
+import Berita from './components/Berita';
+import FAQ from './components/FAQ';
 import Features from './components/Features';
 import Stats from './components/Stats';
 import Testimonials from './components/Testimonials';
@@ -21,8 +26,13 @@ export default function App() {
         <Hero />
         <About />
         <Services />
+        <ProsesSertifikasi />
         <Features />
+        <Regulasi />
+        <FatwaMUI />
         <Stats />
+        <Berita />
+        <FAQ />
         <Testimonials />
         <CTA />
       </main>
