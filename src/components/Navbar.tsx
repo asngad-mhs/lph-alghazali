@@ -17,7 +17,7 @@ export default function Navbar() {
     { name: 'Home', href: '#' },
     { name: 'Layanan Kami', href: '#services' },
     { name: 'Profil', href: '#about' },
-    { name: 'Proses Sertifikat', href: '#proses' },
+    { name: 'Proses Sertifikasi', href: '#proses' },
     { name: 'Regulasi', href: '#regulasi' },
     { name: 'Fatwa MUI', href: '#fatwa' },
     { name: 'Berita', href: '#berita' },
