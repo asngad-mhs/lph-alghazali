@@ -36,7 +36,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <img 
-              src="https://drive.google.com/uc?export=view&id=1279_6Jv2PVryShpLbfRpHo6uX3YYue6T" 
+              src="https://drive.google.com/file/d/1279_6Jv2PVryShpLbfRpHo6uX3YYue6T/view?usp=sharing" 
               alt="Logo LPH Al-Ghazali" 
               className="h-10 w-auto object-contain"
               referrerPolicy="no-referrer"
