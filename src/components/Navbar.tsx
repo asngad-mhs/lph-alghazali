@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, ShieldCheck, Phone } from 'lucide-react';
-
-// Ganti link di bawah ini dengan link gambar logo langsung (berakhiran .png atau .jpg)
-const LOGO_URL = "/logo.jpg";
+import logoImg from '../assets/logo.jpg';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,19 +36,11 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            {!imgError ? (
-              <img 
-                src={LOGO_URL} 
-                alt="Logo LPH Al-Ghazali" 
-                className="h-10 md:h-12 w-auto object-contain"
-                referrerPolicy="no-referrer"
-                onError={() => setImgError(true)}
-              />
-            ) : (
-              <div className="bg-primary-700 text-white p-2 rounded-lg">
-                <ShieldCheck size={28} />
-              </div>
-            )}
+            <img 
+              src={logoImg} 
+              alt="Logo LPH Al-Ghazali" 
+              className="h-10 md:h-12 w-auto object-contain"
+            />
             <div>
               <h1 className={`font-serif font-bold text-xl leading-tight ${isScrolled ? 'text-primary-900' : 'text-primary-900 lg:text-white'}`}>
                 LPH Al-Ghazali
