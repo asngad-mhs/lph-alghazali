@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ShieldCheck, Phone } from 'lucide-react';
+
+// Ganti link di bawah ini dengan link gambar logo langsung (berakhiran .png atau .jpg)
+const LOGO_URL = "https://drive.google.com/drive/folders/1NZjA_KhxbrRiTMzwbeRq6zonwb6zeRLj?hl=ID";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,7 +26,7 @@ export default function Navbar() {
     { name: 'Fatwa MUI', href: '#fatwa' },
     { name: 'Berita', href: '#berita' },
     { name: 'FAQ', href: '#faq' },
-    { name: 'Kontak', href: '#contact' },
+    { name: 'Kontak', href: '#contact', icon: <Phone size={14} className="mr-1.5" /> },
   ];
 
   return (
@@ -35,12 +39,19 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <img 
-              src="https://drive.google.com/file/d/1279_6Jv2PVryShpLbfRpHo6uX3YYue6T/view?usp=sharing" 
-              alt="Logo LPH Al-Ghazali" 
-              className="h-10 w-auto object-contain"
-              referrerPolicy="no-referrer"
-            />
+            {!imgError ? (
+              <img 
+                src={LOGO_URL} 
+                alt="Logo LPH Al-Ghazali" 
+                className="h-10 md:h-12 w-auto object-contain"
+                referrerPolicy="no-referrer"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="bg-primary-700 text-white p-2 rounded-lg">
+                <ShieldCheck size={28} />
+              </div>
+            )}
             <div>
               <h1 className={`font-serif font-bold text-xl leading-tight ${isScrolled ? 'text-primary-900' : 'text-primary-900 lg:text-white'}`}>
                 LPH Al-Ghazali
@@ -57,10 +68,11 @@ export default function Navbar() {
               <a
                 key={link.name}
                 href={link.href}
-                className={`font-medium text-xs xl:text-sm hover:text-gold-500 transition-colors ${
+                className={`flex items-center font-medium text-xs xl:text-sm hover:text-gold-500 transition-colors ${
                   isScrolled ? 'text-stone-600' : 'text-stone-600 lg:text-white/90'
                 }`}
               >
+                {link.icon && link.icon}
                 {link.name}
               </a>
             ))}
@@ -92,9 +104,10 @@ export default function Navbar() {
               <a
                 key={link.name}
                 href={link.href}
-                className="block px-3 py-3 text-base font-medium text-stone-700 hover:text-primary-700 hover:bg-primary-50 rounded-md"
+                className="flex items-center px-3 py-3 text-base font-medium text-stone-700 hover:text-primary-700 hover:bg-primary-50 rounded-md"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
+                {link.icon && <span className="mr-2">{link.icon}</span>}
                 {link.name}
               </a>
             ))}
