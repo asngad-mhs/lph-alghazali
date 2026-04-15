@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, ShieldCheck } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -35,9 +35,11 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="bg-primary-700 text-white p-2 rounded-lg">
-              <ShieldCheck size={28} />
-            </div>
+            <img 
+              src="blob:https://gemini.google.com/d80c9bad-2753-40bf-878c-3da254aa5bc5" 
+              alt="Logo LPH Al-Ghazali" 
+              className="h-10 w-auto object-contain"
+            />
             <div>
               <h1 className={`font-serif font-bold text-xl leading-tight ${isScrolled ? 'text-primary-900' : 'text-primary-900 lg:text-white'}`}>
                 LPH Al-Ghazali
