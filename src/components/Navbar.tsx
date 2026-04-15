@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, ShieldCheck, Phone } from 'lucide-react';
 
 // Ganti link di bawah ini dengan link gambar logo langsung (berakhiran .png atau .jpg)
-const LOGO_URL = "https://drive.google.com/drive/folders/1NZjA_KhxbrRiTMzwbeRq6zonwb6zeRLj?hl=ID";
+const LOGO_URL = "/logo.png";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
