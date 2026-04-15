@@ -36,9 +36,10 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex items-center gap-2">
             <img 
-              src="blob:https://gemini.google.com/d80c9bad-2753-40bf-878c-3da254aa5bc5" 
+              src="https://drive.google.com/uc?export=view&id=1279_6Jv2PVryShpLbfRpHo6uX3YYue6T" 
               alt="Logo LPH Al-Ghazali" 
               className="h-10 w-auto object-contain"
+              referrerPolicy="no-referrer"
             />
             <div>
               <h1 className={`font-serif font-bold text-xl leading-tight ${isScrolled ? 'text-primary-900' : 'text-primary-900 lg:text-white'}`}>
