@@ -104,9 +104,10 @@ export default function Berita() {
                 <h4 className="text-xl font-bold text-stone-900 mb-3 line-clamp-2 group-hover:text-primary-700 transition-colors">
                   {item.title}
                 </h4>
-                <p className="text-stone-600 text-sm mb-4 line-clamp-3 flex-grow">
-                  {item.content}
-                </p>
+                <div 
+                  className="text-stone-600 text-sm mb-4 line-clamp-3 flex-grow [&>p]:inline"
+                  dangerouslySetInnerHTML={{ __html: item.content }}
+                />
                 <button className="text-primary-600 font-semibold text-sm flex items-center gap-1 hover:text-primary-800 mt-auto text-left w-max">
                   Baca Selengkapnya <ArrowRight size={16} />
                 </button>

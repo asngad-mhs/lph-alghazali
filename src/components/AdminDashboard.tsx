@@ -4,6 +4,8 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, handleFirestoreError, OperationType, auth, storage } from '../firebase';
 import { LogOut, Trash2, CheckCircle, XCircle, FileText, Users, Plus, Edit2, X } from 'lucide-react';
 import { signOut } from 'firebase/auth';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function AdminDashboard({ isAdmin }: { isAdmin: boolean }) {
   const [activeTab, setActiveTab] = useState<'registrations' | 'news'>('registrations');
@@ -306,14 +308,16 @@ export default function AdminDashboard({ isAdmin }: { isAdmin: boolean }) {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-stone-700 mb-1.5">Konten Berita</label>
-                    <textarea 
-                      required rows={8} maxLength={50000}
-                      value={newsForm.content} onChange={e => setNewsForm({...newsForm, content: e.target.value})}
-                      className="w-full px-4 py-3 rounded-lg border border-stone-300 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
-                      placeholder="Ketik isi berita di sini..."
-                    ></textarea>
+                    <div className="bg-white rounded-lg overflow-hidden border border-stone-300 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-200 transition-all">
+                      <ReactQuill 
+                        theme="snow"
+                        value={newsForm.content}
+                        onChange={(content) => setNewsForm({...newsForm, content})}
+                        className="h-64"
+                      />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 mt-2 mb-6">
+                  <div className="flex items-center gap-2 mt-4 pt-10 mb-6">
                     <input 
                       type="checkbox" id="published"
                       checked={newsForm.published} onChange={e => setNewsForm({...newsForm, published: e.target.checked})}
