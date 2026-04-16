@@ -175,6 +175,19 @@ export default function Navbar() {
                     </div>
                   </div>
                 </div>
+
+                {/* Google Maps Embed */}
+                <div className="mt-8 rounded-xl overflow-hidden h-40 xl:h-48 shadow-inner border border-primary-800/50 hidden sm:block">
+                  <iframe 
+                    src="https://maps.google.com/maps?q=Jl.+Kemerdekaan+Barat+No.12,+Kesugihan,+Cilacap,+Jawa+Tengah&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                    width="100%" 
+                    height="100%" 
+                    style={{ border: 0 }} 
+                    allowFullScreen 
+                    loading="lazy" 
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
               </div>
 
               {/* Right Column: Form */}
