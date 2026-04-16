@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, ShieldCheck, Phone } from 'lucide-react';
+import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send } from 'lucide-react';
 import logoImg from '../assets/logo.jpg';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -65,12 +66,12 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
-            <a
-              href="#register"
+            <button
+              onClick={() => setIsRegisterModalOpen(true)}
               className="bg-gold-500 hover:bg-gold-600 text-primary-900 font-semibold px-5 py-2.5 rounded-full text-sm transition-all shadow-sm hover:shadow-md"
             >
               Daftar Sekarang
-            </a>
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -101,13 +102,142 @@ export default function Navbar() {
               </a>
             ))}
             <div className="pt-4 px-3">
-              <a
-                href="#register"
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsRegisterModalOpen(true);
+                }}
                 className="block w-full text-center bg-primary-700 hover:bg-primary-800 text-white font-semibold px-5 py-3 rounded-lg text-base transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
               >
                 Daftar Sekarang
-              </a>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Registration Modal */}
+      {isRegisterModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+          <div 
+            className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm"
+            onClick={() => setIsRegisterModalOpen(false)}
+          ></div>
+          
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <button 
+              onClick={() => setIsRegisterModalOpen(false)}
+              className="absolute top-4 right-4 p-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full transition-colors z-10"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="grid md:grid-cols-5 h-full">
+              {/* Left Column: Contact Info */}
+              <div className="bg-primary-900 text-white p-8 md:p-10 md:col-span-2 flex flex-col justify-center">
+                <h3 className="text-2xl font-serif font-bold mb-2">Hubungi Kami</h3>
+                <p className="text-primary-200 text-sm mb-8">
+                  Punya pertanyaan seputar proses sertifikasi? Tim kami siap membantu Anda.
+                </p>
+
+                <div className="space-y-6">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary-800 p-3 rounded-lg flex-shrink-0">
+                      <Phone size={20} className="text-gold-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-primary-300 uppercase tracking-wider font-semibold mb-1">Telepon / WhatsApp</p>
+                      <p className="font-medium">+62 813-2778-2079</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary-800 p-3 rounded-lg flex-shrink-0">
+                      <Mail size={20} className="text-gold-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-primary-300 uppercase tracking-wider font-semibold mb-1">Email</p>
+                      <p className="font-medium">lph@unugha.ac.id</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary-800 p-3 rounded-lg flex-shrink-0">
+                      <MapPin size={20} className="text-gold-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-primary-300 uppercase tracking-wider font-semibold mb-1">Alamat</p>
+                      <p className="font-medium text-sm leading-relaxed">
+                        Jl. Kemerdekaan Barat No.12,<br />
+                        Kesugihan, Cilacap,<br />
+                        Jawa Tengah 53274
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Form */}
+              <div className="p-8 md:p-10 md:col-span-3">
+                <h3 className="text-2xl font-serif font-bold text-stone-900 mb-2">Info Lanjut</h3>
+                <p className="text-stone-500 text-sm mb-8">
+                  Silakan isi formulir di bawah ini dan kami akan segera menghubungi Anda kembali.
+                </p>
+
+                <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-semibold text-stone-700 mb-1.5">Nama Lengkap / Perusahaan</label>
+                    <input 
+                      type="text" 
+                      id="name" 
+                      className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                      placeholder="Masukkan nama Anda"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label htmlFor="phone" className="block text-sm font-semibold text-stone-700 mb-1.5">No. Telepon / WhatsApp</label>
+                      <input 
+                        type="tel" 
+                        id="phone" 
+                        className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                        placeholder="Contoh: 08123456789"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-semibold text-stone-700 mb-1.5">Email</label>
+                      <input 
+                        type="email" 
+                        id="email" 
+                        className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                        placeholder="email@contoh.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="subject" className="block text-sm font-semibold text-stone-700 mb-1.5">Subjek / Keperluan</label>
+                    <select 
+                      id="subject" 
+                      className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all bg-white"
+                    >
+                      <option value="">Pilih keperluan Anda...</option>
+                      <option value="sertifikasi">Pendaftaran Sertifikasi Halal</option>
+                      <option value="pelatihan">Informasi Pelatihan Penyelia Halal</option>
+                      <option value="konsultasi">Konsultasi Halal</option>
+                      <option value="lainnya">Lainnya</option>
+                    </select>
+                  </div>
+
+                  <button 
+                    type="submit"
+                    className="w-full bg-primary-700 hover:bg-primary-800 text-white font-bold py-3.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 mt-4"
+                  >
+                    Kirim Pesan <Send size={18} />
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
