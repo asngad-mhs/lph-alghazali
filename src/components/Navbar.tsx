@@ -6,6 +6,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,29 +74,32 @@ export default function Navbar() {
               >
                 Daftar Sekarang
               </button>
-              <a 
-                href="#admin" 
+              <button 
+                onClick={() => setIsAdminModalOpen(true)}
                 aria-label="Login Admin"
                 className={`p-2 rounded-full hover:bg-stone-200/50 transition-colors ${
                   isScrolled ? 'text-primary-900' : 'text-primary-900 lg:text-white'
                 }`}
               >
                 <UserCog size={20} />
-              </a>
+              </button>
             </div>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="lg:hidden flex items-center gap-2">
-            <a 
-              href="#admin" 
+            <button 
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsAdminModalOpen(true);
+              }}
               aria-label="Login Admin"
               className={`p-2 rounded-full hover:bg-stone-200/50 transition-colors ${
                 isScrolled ? 'text-primary-900' : 'text-primary-900'
               }`}
             >
               <UserCog size={22} />
-            </a>
+            </button>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`${isScrolled ? 'text-stone-800' : 'text-primary-900'} p-2`}
@@ -271,6 +275,82 @@ export default function Navbar() {
                   </button>
                 </form>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Admin Login Modal */}
+      {isAdminModalOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6">
+          <div 
+            className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm"
+            onClick={() => setIsAdminModalOpen(false)}
+          ></div>
+          
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+            <button 
+              onClick={() => setIsAdminModalOpen(false)}
+              className="absolute top-4 right-4 p-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full transition-colors z-10"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="p-8 sm:p-10">
+              <div className="text-center mb-8">
+                <div className="bg-primary-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <UserCog size={32} className="text-primary-700" />
+                </div>
+                <h3 className="text-2xl font-serif font-bold text-stone-900">Login Admin</h3>
+                <p className="text-stone-500 text-sm mt-2">
+                  Masuk ke dashboard untuk mengelola data LPH.
+                </p>
+              </div>
+
+              <form className="space-y-5" onSubmit={(e) => {
+                e.preventDefault();
+                alert("Fitur Login Admin (Backend) akan dihubungkan disini.");
+                setIsAdminModalOpen(false);
+              }}>
+                <div>
+                  <label htmlFor="admin-username" className="block text-sm font-semibold text-stone-700 mb-1.5">Username / Email</label>
+                  <input 
+                    type="text" 
+                    id="admin-username" 
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                    placeholder="Masukkan username Anda"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="admin-password" className="block text-sm font-semibold text-stone-700 mb-1.5">Password</label>
+                  <input 
+                    type="password" 
+                    id="admin-password" 
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                    placeholder="••••••••"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" className="rounded text-primary-600 focus:ring-primary-500 border-stone-300" />
+                    <span className="text-sm text-stone-600">Ingat Saya</span>
+                  </label>
+                  <a href="#" className="text-sm font-semibold text-primary-700 hover:text-primary-800">
+                    Lupa Password?
+                  </a>
+                </div>
+
+                <button 
+                  type="submit"
+                  className="w-full bg-primary-700 hover:bg-primary-800 text-white font-bold py-3.5 px-6 rounded-lg transition-colors mt-2"
+                >
+                  Masuk Sekarang
+                </button>
+              </form>
             </div>
           </div>
         </div>
