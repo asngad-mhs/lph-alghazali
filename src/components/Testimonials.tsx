@@ -5,19 +5,19 @@ const testimonials = [
     name: 'Ahmad Fauzi',
     role: 'Pemilik UMKM Kuliner',
     content: 'Pelayanan LPH Al-Ghazali sangat profesional. Pendampingan yang diberikan sangat jelas sehingga proses sertifikasi halal produk saya berjalan lancar tanpa kendala.',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+    image: 'https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
     name: 'Siti Aminah',
     role: 'Peserta Pelatihan Penyelia Halal',
     content: 'Materi pelatihan sangat komprehensif dan mudah dipahami. Instrukturnya berpengalaman dan sabar menjawab setiap pertanyaan. Sangat direkomendasikan!',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+    image: 'https://images.unsplash.com/photo-1589156229687-496a31ad1d1f?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
     name: 'Budi Santoso',
     role: 'Direktur PT. Pangan Sehat',
     content: 'Sebagai perusahaan skala menengah, kami sangat terbantu dengan audit yang teliti dan objektif dari tim LPH Al-Ghazali. Integritas mereka tidak diragukan lagi.',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+    image: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   }
 ];
 

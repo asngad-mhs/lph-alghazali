@@ -10,13 +10,13 @@ export default function About() {
           <div className="relative order-2 lg:order-1">
             <div className="grid grid-cols-2 gap-4">
               <img 
-                src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                src="https://images.unsplash.com/photo-1584286595398-a59f21d313f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
                 alt="Pelatihan Halal" 
                 className="rounded-2xl w-full h-64 object-cover mt-8 shadow-lg"
                 referrerPolicy="no-referrer"
               />
               <img 
-                src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
+                src="https://images.unsplash.com/photo-1585036156171-384164a8c675?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" 
                 alt="Sertifikasi Halal" 
                 className="rounded-2xl w-full h-64 object-cover shadow-lg"
                 referrerPolicy="no-referrer"

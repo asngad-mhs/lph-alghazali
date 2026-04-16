@@ -60,7 +60,7 @@ export default function Features() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-tr from-gold-500/20 to-primary-500/20 rounded-3xl transform rotate-3 scale-105 blur-xl"></div>
             <img 
-              src="https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+              src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
               alt="Tim Auditor Halal" 
               className="relative rounded-3xl shadow-2xl border border-primary-700/50 object-cover h-[600px] w-full"
               referrerPolicy="no-referrer"

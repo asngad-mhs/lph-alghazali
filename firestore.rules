@@ -173,8 +173,8 @@ service cloud.firestore {
     }
 
     match /news/{newsId} {
-      // Requires auth to read, meaning public must be authenticated anonymously.
-      allow read: if isAuthenticated();
+      // Public can read news out of the box
+      allow read: if true;
       allow create: if isAdmin() && isValidNews(request.resource.data);
       allow update: if isAdmin() && isValidNews(request.resource.data);
       allow delete: if isAdmin();
