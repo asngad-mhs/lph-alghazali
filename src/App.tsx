@@ -10,6 +10,7 @@ import About from './components/About';
 import Services from './components/Services';
 import ProsesSertifikasi from './components/ProsesSertifikasi';
 import Regulasi from './components/Regulasi';
+import Pendaftaran from './components/Pendaftaran';
 import FatwaMUI from './components/FatwaMUI';
 import Berita from './components/Berita';
 import FAQ from './components/FAQ';
@@ -69,7 +70,7 @@ export default function App() {
         <Berita />
         <FAQ />
         <Testimonials />
-        <CTA />
+        <Pendaftaran />
       </main>
       <Footer />
     </div>

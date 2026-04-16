@@ -4,8 +4,8 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, handleFirestoreError, OperationType, auth, storage } from '../firebase';
 import { LogOut, Trash2, CheckCircle, XCircle, FileText, Users, Plus, Edit2, X } from 'lucide-react';
 import { signOut } from 'firebase/auth';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 export default function AdminDashboard({ isAdmin }: { isAdmin: boolean }) {
   const [activeTab, setActiveTab] = useState<'registrations' | 'news'>('registrations');
