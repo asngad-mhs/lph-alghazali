@@ -8,6 +8,31 @@ export default function Navbar() {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
 
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    subject: ''
+  });
+
+  const handleWhatsAppSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const adminPhone = "6281327782079";
+    const subjectMap: Record<string, string> = {
+      sertifikasi: "Pendaftaran Sertifikasi Halal",
+      pelatihan: "Informasi Pelatihan Penyelia Halal",
+      konsultasi: "Konsultasi Halal",
+      lainnya: "Lainnya"
+    };
+    const subjectText = subjectMap[formData.subject] || formData.subject || "Belum dipilih";
+
+    const message = `Halo Admin LPH Al-Ghazali,\n\nSaya menghubungi Anda dari Website. Berikut data diri dan keperluan saya:\n\n*Nama:* ${formData.name}\n*No. WA:* ${formData.phone}\n*Email:* ${formData.email}\n*Keperluan:* ${subjectText}\n\nMohon info dan arahannya lebih lanjut. Terima kasih.`;
+    
+    window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`, "_blank");
+    setIsRegisterModalOpen(false);
+    setFormData({ name: '', phone: '', email: '', subject: '' });
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -221,12 +246,15 @@ export default function Navbar() {
                   Silakan isi formulir di bawah ini dan kami akan segera menghubungi Anda kembali.
                 </p>
 
-                <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+                <form className="space-y-5" onSubmit={handleWhatsAppSubmit}>
                   <div>
                     <label htmlFor="name" className="block text-sm font-semibold text-stone-700 mb-1.5">Nama Lengkap / Perusahaan</label>
                     <input 
                       type="text" 
                       id="name" 
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
                       className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
                       placeholder="Masukkan nama Anda"
                     />
@@ -238,6 +266,9 @@ export default function Navbar() {
                       <input 
                         type="tel" 
                         id="phone" 
+                        required
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
                         className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
                         placeholder="Contoh: 08123456789"
                       />
@@ -247,6 +278,9 @@ export default function Navbar() {
                       <input 
                         type="email" 
                         id="email" 
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({...formData, email: e.target.value})}
                         className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
                         placeholder="email@contoh.com"
                       />
@@ -257,6 +291,9 @@ export default function Navbar() {
                     <label htmlFor="subject" className="block text-sm font-semibold text-stone-700 mb-1.5">Subjek / Keperluan</label>
                     <select 
                       id="subject" 
+                      required
+                      value={formData.subject}
+                      onChange={(e) => setFormData({...formData, subject: e.target.value})}
                       className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all bg-white"
                     >
                       <option value="">Pilih keperluan Anda...</option>
