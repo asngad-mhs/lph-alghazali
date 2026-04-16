@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog } from 'lucide-react';
-import logoImg from '../assets/logo-lph.jpeg';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -62,13 +61,13 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <img 
-              src={logoImg} 
+              src="https://data.asngad.my.id/logo-lph.jpeg" 
               alt="Logo LPH Al-Ghazali" 
-              className="h-10 md:h-12 w-auto object-contain"
+              className="h-12 md:h-16 w-auto object-contain rounded-md"
             />
-            <div>
+            <div className="flex flex-col justify-center">
               <h1 className={`font-serif font-bold text-xl leading-tight ${isScrolled ? 'text-primary-900' : 'text-primary-900 lg:text-white'}`}>
                 LPH Al-Ghazali
               </h1>
