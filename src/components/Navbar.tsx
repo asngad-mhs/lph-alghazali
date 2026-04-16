@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send } from 'lucide-react';
+import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog } from 'lucide-react';
 import logoImg from '../assets/logo.jpg';
 
 export default function Navbar() {
@@ -66,21 +66,41 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
-            <button
-              onClick={() => setIsRegisterModalOpen(true)}
-              className="bg-gold-500 hover:bg-gold-600 text-primary-900 font-semibold px-5 py-2.5 rounded-full text-sm transition-all shadow-sm hover:shadow-md"
-            >
-              Daftar Sekarang
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setIsRegisterModalOpen(true)}
+                className="bg-gold-500 hover:bg-gold-600 text-primary-900 font-semibold px-5 py-2.5 rounded-full text-sm transition-all shadow-sm hover:shadow-md"
+              >
+                Daftar Sekarang
+              </button>
+              <a 
+                href="#admin" 
+                aria-label="Login Admin"
+                className={`p-2 rounded-full hover:bg-stone-200/50 transition-colors ${
+                  isScrolled ? 'text-primary-900' : 'text-primary-900 lg:text-white'
+                }`}
+              >
+                <UserCog size={20} />
+              </a>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center">
+          <div className="lg:hidden flex items-center gap-2">
+            <a 
+              href="#admin" 
+              aria-label="Login Admin"
+              className={`p-2 rounded-full hover:bg-stone-200/50 transition-colors ${
+                isScrolled ? 'text-primary-900' : 'text-primary-900'
+              }`}
+            >
+              <UserCog size={22} />
+            </a>
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`${isScrolled ? 'text-stone-800' : 'text-primary-900'}`}
+              className={`${isScrolled ? 'text-stone-800' : 'text-primary-900'} p-2`}
             >
-              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              {isMobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </div>
         </div>
