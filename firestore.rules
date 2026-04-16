@@ -1,0 +1,199 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Document ID: {userId} (matches Firebase Auth UID)
+    // Fields:
+    //   - email: string (required)
+    //   - name: string (optional)
+    //   - role: string (required, 'admin' or 'user')
+    //   - createdAt: timestamp (optional)
+    //
+    // Collection: registrations
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required, max 100)
+    //   - phone: string (required, max 20)
+    //   - email: string (optional, valid format)
+    //   - subject: string (required, max 100)
+    //   - status: string (optional, 'new', 'processed', 'closed')
+    //   - createdAt: timestamp (required)
+    //
+    // Collection: news
+    // Document ID: auto-generated
+    // Fields:
+    //   - title: string (required, max 200)
+    //   - content: string (required, max 50000)
+    //   - imageUrl: string (optional, valid URL)
+    //   - published: boolean (required)
+    //   - createdAt: timestamp (required)
+    //   - authorUid: string (optional)
+    //
+    // Collection: faqs
+    // Document ID: auto-generated
+    // Fields:
+    //   - question: string (required, max 500)
+    //   - answer: string (required, max 5000)
+    //   - order: number (optional)
+    //
+    // Collection: regulations
+    // Document ID: auto-generated
+    // Fields:
+    //   - title: string (required, max 300)
+    //   - description: string (optional, max 1000)
+    //   - link: string (required, valid URL)
+    //   - type: string (required, 'undang_undang', 'fatwa_mui', 'peraturan_pemerintah')
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
+        (request.auth.token.email == "asngad@mhs.unugha.ac.id" && request.auth.token.email_verified == true)
+      );
+    }
+    
+    function isDocOwner() {
+      return isAuthenticated() && resource.data.uid == request.auth.uid;
+    }
+    
+    function uidUnchanged() {
+      return !('uid' in request.resource.data) || request.resource.data.uid == request.auth.uid;
+    }
+
+    function uidNotModified() {
+      return !('uid' in request.resource.data) || request.resource.data.uid == resource.data.uid;
+    }
+
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+    
+    function validStringLength(field, minLen, maxLen) {
+      return request.resource.data[field] is string &&
+             request.resource.data[field].size() >= minLen &&
+             request.resource.data[field].size() <= maxLen;
+    }
+
+    function isValidOptionalString(field, minLen, maxLen) {
+      return !(field in request.resource.data) ||
+             (request.resource.data[field] is string &&
+              request.resource.data[field].size() >= minLen &&
+              request.resource.data[field].size() <= maxLen);
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidUrl(url) {
+      return url is string && (url.matches("^https://.*") || url.matches("^http://.*"));
+    }
+
+    function isPositiveNumber(field) {
+      return request.resource.data[field] is number && request.resource.data[field] >= 0;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    
+    function isValidUser(data) {
+      return hasRequiredFields(['email', 'role']) &&
+             data.email is string && isValidEmail(data.email) &&
+             data.role in ['admin', 'user'] &&
+             isValidOptionalString('name', 2, 100);
+    }
+
+    function isValidRegistration(data) {
+      return hasRequiredFields(['name', 'phone', 'subject', 'createdAt']) &&
+             validStringLength('name', 2, 100) &&
+             validStringLength('phone', 5, 20) &&
+             validStringLength('subject', 2, 100) &&
+             data.createdAt is timestamp &&
+             (!( 'email' in data ) || data.email == '' || isValidEmail(data.email)) &&
+             (!( 'status' in data ) || data.status in ['new', 'processed', 'closed']);
+    }
+
+    function isValidNews(data) {
+      return hasRequiredFields(['title', 'content', 'published', 'createdAt']) &&
+             validStringLength('title', 3, 200) &&
+             validStringLength('content', 10, 50000) &&
+             data.published is bool &&
+             data.createdAt is timestamp &&
+             (!( 'imageUrl' in data ) || data.imageUrl == '' || isValidUrl(data.imageUrl)) &&
+             isValidOptionalString('authorUid', 1, 100);
+    }
+
+    function isValidFAQ(data) {
+      return hasRequiredFields(['question', 'answer']) &&
+             validStringLength('question', 5, 500) &&
+             validStringLength('answer', 5, 5000) &&
+             (!( 'order' in data ) || request.resource.data.order is number);
+    }
+
+    function isValidRegulation(data) {
+      return hasRequiredFields(['title', 'link', 'type']) &&
+             validStringLength('title', 5, 300) &&
+             isValidUrl(data.link) &&
+             data.type in ['undang_undang', 'fatwa_mui', 'peraturan_pemerintah'] &&
+             isValidOptionalString('description', 5, 1000);
+    }
+
+    // ===============================================================
+    // Rule Mappings
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == userId);
+      allow create: if isAuthenticated() && isValidUser(request.resource.data) && (isAdmin() || (request.auth.uid == userId && request.resource.data.role == 'user'));
+      allow update: if isAuthenticated() && isValidUser(request.resource.data) && (isAdmin() || (request.auth.uid == userId && request.resource.data.role == resource.data.role));
+      allow delete: if isAdmin();
+    }
+
+    match /registrations/{registrationId} {
+      // Intentionally locking down read to admin.
+      // Allow unauthenticated creations for public contact form
+      allow read: if isAdmin();
+      allow create: if isValidRegistration(request.resource.data);
+      allow update: if isAdmin() && isValidRegistration(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /news/{newsId} {
+      // Requires auth to read, meaning public must be authenticated anonymously.
+      allow read: if isAuthenticated();
+      allow create: if isAdmin() && isValidNews(request.resource.data);
+      allow update: if isAdmin() && isValidNews(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /faqs/{faqId} {
+      // Requires auth to read
+      allow read: if isAuthenticated();
+      allow create: if isAdmin() && isValidFAQ(request.resource.data);
+      allow update: if isAdmin() && isValidFAQ(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /regulations/{regId} {
+      // Requires auth to read
+      allow read: if isAuthenticated();
+      allow create: if isAdmin() && isValidRegulation(request.resource.data);
+      allow update: if isAdmin() && isValidRegulation(request.resource.data);
+      allow delete: if isAdmin();
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with roles.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "role"]
+    },
+    "Registration": {
+      "title": "Registration",
+      "description": "Client registration or contact request.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "subject": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["new", "processed", "closed"] }
+      },
+      "required": ["name", "phone", "subject", "createdAt"]
+    },
+    "News": {
+      "title": "News",
+      "description": "News article or announcement.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "authorUid": { "type": "string" }
+      },
+      "required": ["title", "content", "published", "createdAt"]
+    },
+    "FAQ": {
+      "title": "FAQ",
+      "description": "Frequently Asked Question.",
+      "type": "object",
+      "properties": {
+        "question": { "type": "string" },
+        "answer": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["question", "answer"]
+    },
+    "Regulation": {
+      "title": "Regulation",
+      "description": "Regulation document or link.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "link": { "type": "string" },
+        "type": { "type": "string", "enum": ["undang_undang", "fatwa_mui", "peraturan_pemerintah"] }
+      },
+      "required": ["title", "link", "type"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Store user profiles, primarily used for admin RBAC."
+    },
+    "/registrations/{registrationId}": {
+      "schema": { "$ref": "#/entities/Registration" },
+      "description": "Store client contact requests and registrations."
+    },
+    "/news/{newsId}": {
+      "schema": { "$ref": "#/entities/News" },
+      "description": "Store news articles."
+    },
+    "/faqs/{faqId}": {
+      "schema": { "$ref": "#/entities/FAQ" },
+      "description": "Store frequently asked questions."
+    },
+    "/regulations/{regId}": {
+      "schema": { "$ref": "#/entities/Regulation" },
+      "description": "Store official regulations and fatwas."
+    }
+  }
+}

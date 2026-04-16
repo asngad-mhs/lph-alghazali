@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog } from 'lucide-react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth, db, handleFirestoreError, OperationType } from '../firebase';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -14,22 +17,44 @@ export default function Navbar() {
     subject: ''
   });
 
-  const handleWhatsAppSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const adminPhone = "6281327782079";
-    const subjectMap: Record<string, string> = {
-      sertifikasi: "Pendaftaran Sertifikasi Halal",
-      pelatihan: "Informasi Pelatihan Penyelia Halal",
-      konsultasi: "Konsultasi Halal",
-      lainnya: "Lainnya"
-    };
-    const subjectText = subjectMap[formData.subject] || formData.subject || "Belum dipilih";
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const message = `Halo Admin LPH Al-Ghazali,\n\nSaya menghubungi Anda dari Website. Berikut data diri dan keperluan saya:\n\n*Nama:* ${formData.name}\n*No. WA:* ${formData.phone}\n*Email:* ${formData.email}\n*Keperluan:* ${subjectText}\n\nMohon info dan arahannya lebih lanjut. Terima kasih.`;
+  const handleWhatsAppSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
     
-    window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`, "_blank");
-    setIsRegisterModalOpen(false);
-    setFormData({ name: '', phone: '', email: '', subject: '' });
+    try {
+      // 1. Simpan ke Firebase Firestore
+      await addDoc(collection(db, 'registrations'), {
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        subject: formData.subject,
+        status: 'new',
+        createdAt: serverTimestamp()
+      });
+
+      // 2. Lanjutkan Redirect ke WhatsApp
+      const adminPhone = "6281327782079";
+      const subjectMap: Record<string, string> = {
+        sertifikasi: "Pendaftaran Sertifikasi Halal",
+        pelatihan: "Informasi Pelatihan Penyelia Halal",
+        konsultasi: "Konsultasi Halal",
+        lainnya: "Lainnya"
+      };
+      const subjectText = subjectMap[formData.subject] || formData.subject || "Belum dipilih";
+
+      const message = `Halo Admin LPH Al-Ghazali,\n\nSaya menghubungi Anda dari Website. Berikut data diri dan keperluan saya:\n\n*Nama:* ${formData.name}\n*No. WA:* ${formData.phone}\n*Email:* ${formData.email}\n*Keperluan:* ${subjectText}\n\nMohon info dan arahannya lebih lanjut. Terima kasih.`;
+      
+      window.open(`https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`, "_blank");
+      setIsRegisterModalOpen(false);
+      setFormData({ name: '', phone: '', email: '', subject: '' });
+    } catch (error) {
+      handleFirestoreError(error, OperationType.CREATE, 'registrations');
+      alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -305,9 +330,10 @@ export default function Navbar() {
 
                   <button 
                     type="submit"
-                    className="w-full bg-primary-700 hover:bg-primary-800 text-white font-bold py-3.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 mt-4"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary-700 hover:bg-primary-800 text-white font-bold py-3.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    Kirim Pesan <Send size={18} />
+                    {isSubmitting ? 'Mengirim...' : <>Kirim Pesan <Send size={18} /></>}
                   </button>
                 </form>
               </div>
@@ -337,56 +363,30 @@ export default function Navbar() {
                 <div className="bg-primary-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <UserCog size={32} className="text-primary-700" />
                 </div>
-                <h3 className="text-2xl font-serif font-bold text-stone-900">Login Admin</h3>
+                <h3 className="text-2xl font-serif font-bold text-stone-900">Sign in</h3>
                 <p className="text-stone-500 text-sm mt-2">
-                  Masuk ke dashboard untuk mengelola data LPH.
+                  Gunakan akun Google Anda yang terdaftar sebagai admin.
                 </p>
               </div>
 
-              <form className="space-y-5" onSubmit={(e) => {
-                e.preventDefault();
-                alert("Fitur Login Admin (Backend) akan dihubungkan disini.");
-                setIsAdminModalOpen(false);
-              }}>
-                <div>
-                  <label htmlFor="admin-username" className="block text-sm font-semibold text-stone-700 mb-1.5">Username / Email</label>
-                  <input 
-                    type="text" 
-                    id="admin-username" 
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
-                    placeholder="Masukkan username Anda"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="admin-password" className="block text-sm font-semibold text-stone-700 mb-1.5">Password</label>
-                  <input 
-                    type="password" 
-                    id="admin-password" 
-                    required
-                    className="w-full px-4 py-3 rounded-lg border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
-                    placeholder="••••••••"
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" className="rounded text-primary-600 focus:ring-primary-500 border-stone-300" />
-                    <span className="text-sm text-stone-600">Ingat Saya</span>
-                  </label>
-                  <a href="#" className="text-sm font-semibold text-primary-700 hover:text-primary-800">
-                    Lupa Password?
-                  </a>
-                </div>
-
+              <div className="space-y-4">
                 <button 
-                  type="submit"
-                  className="w-full bg-primary-700 hover:bg-primary-800 text-white font-bold py-3.5 px-6 rounded-lg transition-colors mt-2"
+                  onClick={async () => {
+                    const provider = new GoogleAuthProvider();
+                    try {
+                      await signInWithPopup(auth, provider);
+                      setIsAdminModalOpen(false);
+                    } catch (error) {
+                      console.error("Gagal login:", error);
+                      alert("Gagal melakukan login. Pastikan Anda mengizinkan popup.");
+                    }
+                  }}
+                  className="w-full bg-white hover:bg-stone-50 border border-stone-200 text-stone-800 font-semibold py-3.5 px-6 rounded-lg transition-colors shadow-sm flex items-center justify-center gap-3"
                 >
-                  Masuk Sekarang
+                  <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)"><path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"></path><path fill="#34A853" d="M -14.754 63.239 C -11.514 63.239 -8.804 62.159 -6.824 60.329 L -10.684 57.329 C -11.764 58.049 -13.134 58.489 -14.754 58.489 C -17.884 58.489 -20.534 56.379 -21.484 53.529 L -25.464 53.529 L -25.464 56.619 C -23.494 60.539 -19.444 63.239 -14.754 63.239 Z"></path><path fill="#FBBC05" d="M -21.484 53.529 C -21.734 52.809 -21.864 52.039 -21.864 51.239 C -21.864 50.439 -21.724 49.669 -21.484 48.949 L -21.484 45.859 L -25.464 45.859 C -26.284 47.479 -26.754 49.299 -26.754 51.239 C -26.754 53.179 -26.284 54.999 -25.464 56.619 L -21.484 53.529 Z"></path><path fill="#EA4335" d="M -14.754 43.989 C -12.984 43.989 -11.404 44.599 -10.154 45.789 L -6.734 42.369 C -8.804 40.429 -11.514 39.239 -14.754 39.239 C -19.444 39.239 -23.494 41.939 -25.464 45.859 L -21.484 48.949 C -20.534 46.099 -17.884 43.989 -14.754 43.989 Z"></path></g></svg>
+                  Login menggunakan Google
                 </button>
-              </form>
+              </div>
             </div>
           </div>
         </div>
