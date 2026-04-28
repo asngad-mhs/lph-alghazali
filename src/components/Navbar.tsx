@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog } from 'lucide-react';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth, db, handleFirestoreError, OperationType } from '../firebase';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,7 +30,10 @@ export default function Navbar() {
   ];
 
   return (
-    <nav
+    <motion.nav
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed w-full z-50 transition-all duration-300 ${
         isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'
       }`}
@@ -37,7 +41,13 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <div className="flex items-center gap-3">
+          <motion.a 
+            href="#" 
+            className="flex items-center gap-3"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <img 
               src="https://data.asngad.my.id/logo-lph.jpeg" 
               alt="Logo LPH Al-Ghazali" 
@@ -51,39 +61,47 @@ export default function Navbar() {
                 Edukasi Halal
               </p>
             </div>
-          </div>
+          </motion.a>
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-4 xl:space-x-5">
-            {navLinks.map((link) => (
-              <a
+            {navLinks.map((link, index) => (
+              <motion.a
                 key={link.name}
                 href={link.href}
-                className={`flex items-center font-medium text-xs xl:text-sm hover:text-gold-500 transition-colors ${
-                  isScrolled ? 'text-stone-600' : 'text-stone-600 lg:text-white/90'
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 * index }}
+                className={`flex items-center font-medium text-xs xl:text-sm transition-colors ${
+                  isScrolled ? 'text-stone-600 hover:text-primary-700' : 'text-stone-600 hover:text-primary-800 lg:text-white/90 lg:hover:text-gold-400'
                 }`}
               >
                 {link.icon && link.icon}
                 {link.name}
-              </a>
+              </motion.a>
             ))}
-            <div className="flex items-center space-x-2">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 * navLinks.length }}
+              className="flex items-center space-x-2"
+            >
               <a
                 href="#register"
-                className="bg-gold-500 hover:bg-gold-600 text-primary-900 font-semibold px-5 py-2.5 rounded-full text-sm transition-all shadow-sm hover:shadow-md"
+                className="bg-gold-500 hover:bg-gold-600 text-primary-900 font-semibold px-5 py-2.5 rounded-full text-sm transition-all shadow-sm hover:shadow-md hover:scale-105 active:scale-95 inline-block"
               >
                 Daftar Sekarang
               </a>
               <button 
                 onClick={() => setIsAdminModalOpen(true)}
                 aria-label="Login Admin"
-                className={`p-2 rounded-full hover:bg-stone-200/50 transition-colors ${
+                className={`p-2 rounded-full hover:bg-stone-200/50 transition-colors hover:scale-110 active:scale-90 ${
                   isScrolled ? 'text-primary-900' : 'text-primary-900 lg:text-white'
                 }`}
               >
                 <UserCog size={20} />
               </button>
-            </div>
+            </motion.div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -111,32 +129,40 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-stone-100 shadow-xl absolute w-full left-0 top-full">
-          <div className="px-4 pt-2 pb-6 space-y-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="flex items-center px-3 py-3 text-base font-medium text-stone-700 hover:text-primary-700 hover:bg-primary-50 rounded-md"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.icon && <span className="mr-2">{link.icon}</span>}
-                {link.name}
-              </a>
-            ))}
-            <div className="pt-4 px-3">
-              <a
-                href="#register"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center bg-primary-700 hover:bg-primary-800 text-white font-semibold px-5 py-3 rounded-lg text-base transition-colors"
-              >
-                Daftar Sekarang
-              </a>
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="lg:hidden bg-white border-t border-stone-100 shadow-xl w-full absolute left-0 top-full overflow-hidden"
+          >
+            <div className="px-4 pt-2 pb-6 space-y-1">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="flex items-center px-3 py-3 text-base font-medium text-stone-700 hover:text-primary-700 hover:bg-primary-50 rounded-md"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {link.icon && <span className="mr-2">{link.icon}</span>}
+                  {link.name}
+                </a>
+              ))}
+              <div className="pt-4 px-3">
+                <a
+                  href="#register"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block w-full text-center bg-primary-700 hover:bg-primary-800 text-white font-semibold px-5 py-3 rounded-lg text-base transition-colors"
+                >
+                  Daftar Sekarang
+                </a>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Admin Login Modal */}
       {isAdminModalOpen && (
@@ -187,6 +213,6 @@ export default function Navbar() {
           </div>
         </div>
       )}
-    </nav>
+    </motion.nav>
   );
 }
