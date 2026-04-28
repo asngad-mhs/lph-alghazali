@@ -1,4 +1,4 @@
-import { BookOpen, Users, Award, History, Target, ShieldCheck, Network, UserCheck, Handshake, ChevronRight } from 'lucide-react';
+import { BookOpen, Users, Award, History, Target, ShieldCheck, Building, UserCheck, Handshake, ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const profileFeatures = [
@@ -18,7 +18,7 @@ const profileFeatures = [
     description: "Berkomitmen pada pemenuhan standar mutu sertifikasi halal melalui continous improvement, dengan objektif kepuasan pelanggan, ketepatan waktu, dan zero complain atas pelayanan."
   },
   {
-    icon: <Network size={24} />,
+    icon: <Building size={24} />,
     title: "Struktur Organisasi",
     description: "Dikelola oleh susunan organisasi yang profesional, independen, dan transparan untuk memastikan seluruh alur pelayanan berjalan efektif tanpa adanya konflik kepentingan."
   },
