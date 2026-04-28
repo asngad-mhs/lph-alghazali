@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog } from 'lucide-react';
+import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog, ChevronDown } from 'lucide-react';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth, db, handleFirestoreError, OperationType } from '../firebase';
 
@@ -7,6 +7,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,7 +20,19 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', href: '#' },
     { name: 'Layanan Kami', href: '#services' },
-    { name: 'Profil', href: '#about' },
+    { 
+      name: 'Profil', 
+      href: '#about',
+      subLinks: [
+        { name: 'Sejarah dan Latar Belakang', href: '#about' },
+        { name: 'Visi dan Misi', href: '#about' },
+        { name: 'Kebijakan Mutu dan Sasaran Mutu', href: '#about' },
+        { name: 'Struktur Organisasi', href: '#about' },
+        { name: 'Auditor Halal', href: '#about' },
+        { name: 'SDM Syariah', href: '#about' },
+        { name: 'Kerjasama', href: '#about' },
+      ]
+    },
     { name: 'Proses Sertifikasi', href: '#proses' },
     { name: 'Regulasi', href: '#regulasi' },
     { name: 'Fatwa MUI', href: '#fatwa' },
@@ -27,6 +40,10 @@ export default function Navbar() {
     { name: 'FAQ', href: '#faq' },
     { name: 'Kontak', href: '#contact', icon: <Phone size={14} className="mr-1.5" /> },
   ];
+
+  const toggleMobileDropdown = (name: string) => {
+    setOpenMobileDropdown(openMobileDropdown === name ? null : name);
+  };
 
   return (
     <nav
@@ -56,16 +73,44 @@ export default function Navbar() {
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-4 xl:space-x-5">
             {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className={`flex items-center font-medium text-xs xl:text-sm hover:text-gold-500 transition-colors ${
-                  isScrolled ? 'text-stone-600' : 'text-stone-600 lg:text-white/90'
-                }`}
-              >
-                {link.icon && link.icon}
-                {link.name}
-              </a>
+              link.subLinks ? (
+                <div key={link.name} className="relative group">
+                  <a
+                    href={link.href}
+                    className={`flex items-center font-medium text-xs xl:text-sm hover:text-gold-500 transition-colors py-2 ${
+                      isScrolled ? 'text-stone-600' : 'text-stone-600 lg:text-white/90'
+                    }`}
+                  >
+                    {link.icon}
+                    {link.name}
+                    <ChevronDown size={14} className="ml-1" />
+                  </a>
+                  <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 w-64 z-50">
+                    <div className="bg-white rounded-xl shadow-xl border border-stone-100 py-2 overflow-hidden">
+                      {link.subLinks.map(subLink => (
+                        <a 
+                          key={subLink.name} 
+                          href={subLink.href} 
+                          className="block px-5 py-2.5 text-sm text-stone-700 hover:bg-gold-50 hover:text-primary-700 transition-colors"
+                        >
+                          {subLink.name}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className={`flex items-center font-medium text-xs xl:text-sm hover:text-gold-500 transition-colors ${
+                    isScrolled ? 'text-stone-600' : 'text-stone-600 lg:text-white/90'
+                  }`}
+                >
+                  {link.icon && link.icon}
+                  {link.name}
+                </a>
+              )
             ))}
             <div className="flex items-center space-x-2">
               <a
@@ -112,18 +157,48 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-stone-100 shadow-xl absolute w-full left-0 top-full">
+        <div className="lg:hidden bg-white border-t border-stone-100 shadow-xl absolute w-full left-0 top-full max-h-[80vh] overflow-y-auto">
           <div className="px-4 pt-2 pb-6 space-y-1">
             {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="flex items-center px-3 py-3 text-base font-medium text-stone-700 hover:text-primary-700 hover:bg-primary-50 rounded-md"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.icon && <span className="mr-2">{link.icon}</span>}
-                {link.name}
-              </a>
+              <div key={link.name}>
+                {link.subLinks ? (
+                  <>
+                    <button
+                      onClick={() => toggleMobileDropdown(link.name)}
+                      className="flex items-center justify-between w-full px-3 py-3 text-base font-medium text-stone-700 hover:text-primary-700 hover:bg-primary-50 rounded-md"
+                    >
+                      <span className="flex items-center">
+                        {link.icon && <span className="mr-2">{link.icon}</span>}
+                        {link.name}
+                      </span>
+                      <ChevronDown size={18} className={`transform transition-transform ${openMobileDropdown === link.name ? 'rotate-180' : ''}`} />
+                    </button>
+                    {openMobileDropdown === link.name && (
+                      <div className="pl-6 pr-3 py-2 space-y-1 bg-stone-50 rounded-md mt-1 mb-2">
+                        {link.subLinks.map(subLink => (
+                          <a
+                            key={subLink.name}
+                            href={subLink.href}
+                            className="block px-3 py-2.5 text-sm font-medium text-stone-600 hover:text-primary-700 hover:bg-white rounded-md"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {subLink.name}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <a
+                    href={link.href}
+                    className="flex items-center px-3 py-3 text-base font-medium text-stone-700 hover:text-primary-700 hover:bg-primary-50 rounded-md"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.icon && <span className="mr-2">{link.icon}</span>}
+                    {link.name}
+                  </a>
+                )}
+              </div>
             ))}
             <div className="pt-4 px-3">
               <a
