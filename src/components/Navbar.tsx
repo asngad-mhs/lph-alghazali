@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog } from 'lucide-react';
+import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog, ChevronDown } from 'lucide-react';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth, db, handleFirestoreError, OperationType } from '../firebase';
 import { motion, AnimatePresence } from 'motion/react';
@@ -20,7 +20,19 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', href: '#' },
     { name: 'Layanan Kami', href: '#services' },
-    { name: 'Profil', href: '#about' },
+    { 
+      name: 'Profil', 
+      href: '#profil',
+      dropdown: [
+        { name: 'Sejarah & Latar Belakang', href: '#sejarah' },
+        { name: 'Visi & Misi', href: '#visi-misi' },
+        { name: 'Kebijakan & Sasaran Mutu', href: '#kebijakan-mutu' },
+        { name: 'Struktur Organisasi', href: '#struktur-organisasi' },
+        { name: 'Auditor Halal', href: '#auditor-halal' },
+        { name: 'SDM Syariah', href: '#sdm-syariah' },
+        { name: 'Kerjasama', href: '#kerjasama' },
+      ]
+    },
     { name: 'Proses Sertifikasi', href: '#proses' },
     { name: 'Regulasi', href: '#regulasi' },
     { name: 'Fatwa MUI', href: '#fatwa' },
@@ -28,6 +40,8 @@ export default function Navbar() {
     { name: 'FAQ', href: '#faq' },
     { name: 'Kontak', href: '#contact', icon: <Phone size={14} className="mr-1.5" /> },
   ];
+
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   return (
     <motion.nav
@@ -66,19 +80,51 @@ export default function Navbar() {
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center space-x-4 xl:space-x-5">
             {navLinks.map((link, index) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-                className={`flex items-center font-medium text-xs xl:text-sm transition-colors ${
-                  isScrolled ? 'text-stone-600 hover:text-primary-700' : 'text-stone-600 hover:text-primary-800 lg:text-white/90 lg:hover:text-gold-400'
-                }`}
+              <div 
+                key={link.name} 
+                className="relative"
+                onMouseEnter={() => link.dropdown && setActiveDropdown(link.name)}
+                onMouseLeave={() => link.dropdown && setActiveDropdown(null)}
               >
-                {link.icon && link.icon}
-                {link.name}
-              </motion.a>
+                <motion.a
+                  href={link.href}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 * index }}
+                  className={`flex items-center font-medium text-xs xl:text-sm transition-colors ${
+                    isScrolled ? 'text-stone-600 hover:text-primary-700' : 'text-stone-600 hover:text-primary-800 lg:text-white/90 lg:hover:text-gold-400'
+                  }`}
+                >
+                  {link.icon && link.icon}
+                  {link.name}
+                  {link.dropdown && <ChevronDown size={14} className="ml-1" />}
+                </motion.a>
+                
+                {/* Dropdown Menu */}
+                {link.dropdown && (
+                  <AnimatePresence>
+                    {activeDropdown === link.name && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full left-0 mt-4 w-60 bg-white rounded-xl shadow-xl border border-stone-100 py-2 overflow-hidden z-50"
+                      >
+                        {link.dropdown.map((subItem) => (
+                          <a
+                            key={subItem.name}
+                            href={subItem.href}
+                            className="block px-4 py-2.5 text-sm font-medium text-stone-600 hover:bg-primary-50 hover:text-primary-700 transition"
+                          >
+                            {subItem.name}
+                          </a>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                )}
+              </div>
             ))}
             <motion.div 
               initial={{ opacity: 0, scale: 0.8 }}
@@ -140,15 +186,36 @@ export default function Navbar() {
           >
             <div className="px-4 pt-2 pb-6 space-y-1">
               {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  className="flex items-center px-3 py-3 text-base font-medium text-stone-700 hover:text-primary-700 hover:bg-primary-50 rounded-md"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {link.icon && <span className="mr-2">{link.icon}</span>}
-                  {link.name}
-                </a>
+                <div key={link.name}>
+                  {link.dropdown ? (
+                    <div className="border-b border-stone-50 pb-2 mb-2">
+                      <div className="flex items-center justify-between px-3 py-3 text-base font-semibold text-stone-900">
+                        {link.name}
+                      </div>
+                      <div className="pl-4 space-y-1">
+                        {link.dropdown.map(sub => (
+                          <a
+                            key={sub.name}
+                            href={sub.href}
+                            className="block px-3 py-2 text-sm font-medium text-stone-600 hover:text-primary-700 hover:bg-primary-50 rounded-md"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {sub.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="flex items-center px-3 py-3 text-base font-medium text-stone-700 hover:text-primary-700 hover:bg-primary-50 rounded-md"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.icon && <span className="mr-2">{link.icon}</span>}
+                      {link.name}
+                    </a>
+                  )}
+                </div>
               ))}
               <div className="pt-4 px-3">
                 <a
