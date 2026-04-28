@@ -2,16 +2,15 @@ import { useState, useEffect } from 'react';
 import { collection, query, orderBy, onSnapshot, doc, updateDoc, deleteDoc, addDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, handleFirestoreError, OperationType, auth, storage } from '../firebase';
-import { LogOut, Trash2, CheckCircle, XCircle, FileText, Users, Plus, Edit2, X, UserCog, Camera } from 'lucide-react';
-import { signOut, updateProfile } from 'firebase/auth';
+import { LogOut, Trash2, CheckCircle, XCircle, FileText, Users, Plus, Edit2, X } from 'lucide-react';
+import { signOut } from 'firebase/auth';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
 export default function AdminDashboard({ isAdmin }: { isAdmin: boolean }) {
-  const [activeTab, setActiveTab] = useState<'registrations' | 'news' | 'profile'>('registrations');
+  const [activeTab, setActiveTab] = useState<'registrations' | 'news'>('registrations');
   const [registrations, setRegistrations] = useState<any[]>([]);
   const [newsList, setNewsList] = useState<any[]>([]);
-  const [isUploadingProfilePhoto, setIsUploadingProfilePhoto] = useState(false);
   
   // News form state
   const [showNewsForm, setShowNewsForm] = useState(false);
@@ -136,32 +135,6 @@ export default function AdminDashboard({ isAdmin }: { isAdmin: boolean }) {
     setEditingNewsId(null);
   };
 
-  const handleProfilePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !auth.currentUser) return;
-
-    setIsUploadingProfilePhoto(true);
-    try {
-      const fileExtension = file.name.split('.').pop();
-      const fileName = `profile_${auth.currentUser.uid}_${Date.now()}.${fileExtension}`;
-      const storageRef = ref(storage, `profiles/${fileName}`);
-      
-      await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(storageRef);
-      
-      await updateProfile(auth.currentUser, { photoURL: downloadURL });
-      
-      // Force an update to show the new picture
-      setActiveTab('registrations');
-      setTimeout(() => setActiveTab('profile'), 0);
-    } catch (error) {
-      console.error("Error uploading profile photo:", error);
-      alert("Gagal mengunggah foto profil. Pastikan Anda memiliki izin dan file tidak bermasalah.");
-    } finally {
-      setIsUploadingProfilePhoto(false);
-    }
-  };
-
   if (!isAdmin) return null;
 
   return (
@@ -181,12 +154,6 @@ export default function AdminDashboard({ isAdmin }: { isAdmin: boolean }) {
               className={`px-4 py-2 rounded font-medium flex items-center gap-2 transition-colors ${activeTab === 'news' ? 'bg-primary-800' : 'hover:bg-primary-800/50'}`}
             >
               <FileText size={18} /> Berita
-            </button>
-            <button 
-              onClick={() => setActiveTab('profile')}
-              className={`px-4 py-2 rounded font-medium flex items-center gap-2 transition-colors ${activeTab === 'profile' ? 'bg-primary-800' : 'hover:bg-primary-800/50'}`}
-            >
-              <UserCog size={18} /> Profil
             </button>
           </div>
         </div>
@@ -212,12 +179,6 @@ export default function AdminDashboard({ isAdmin }: { isAdmin: boolean }) {
             className={`px-4 py-2 rounded font-medium flex items-center gap-2 whitespace-nowrap ${activeTab === 'news' ? 'bg-primary-900 text-white' : 'bg-white text-stone-600 border border-stone-200'}`}
           >
             <FileText size={18} /> Manajemen Berita
-          </button>
-          <button 
-            onClick={() => setActiveTab('profile')}
-            className={`px-4 py-2 rounded font-medium flex items-center gap-2 whitespace-nowrap ${activeTab === 'profile' ? 'bg-primary-900 text-white' : 'bg-white text-stone-600 border border-stone-200'}`}
-          >
-            <UserCog size={18} /> Profil
           </button>
         </div>
 
@@ -417,58 +378,6 @@ export default function AdminDashboard({ isAdmin }: { isAdmin: boolean }) {
                 )}
               </div>
             )}
-          </div>
-        )}
-
-        {activeTab === 'profile' && (
-          <div>
-            <h2 className="text-2xl font-bold mb-6 text-stone-800">Profil Administrator</h2>
-            <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-8 max-w-2xl mx-auto md:mx-0">
-              <div className="flex flex-col md:flex-row gap-8 items-start">
-                <div className="flex flex-col items-center gap-4">
-                  <div className="w-32 h-32 rounded-full overflow-hidden bg-stone-100 border-4 border-stone-50 flex-shrink-0 relative group shadow-sm">
-                    {auth.currentUser?.photoURL ? (
-                      <img src={auth.currentUser.photoURL} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-primary-100 text-primary-500">
-                        <UserCog size={48} />
-                      </div>
-                    )}
-                    <label className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                      <Camera size={24} className="mb-1" />
-                      <span className="text-xs font-medium text-center px-2">Edit<br/>Photo</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={handleProfilePhotoUpload} disabled={isUploadingProfilePhoto} />
-                    </label>
-                  </div>
-                  {isUploadingProfilePhoto && (
-                    <span className="text-sm text-primary-600 font-medium animate-pulse">Mengunggah...</span>
-                  )}
-                  {/* Additional Edit Photo button underneath for better visibility on mobile */}
-                  <label className="md:hidden flex items-center gap-2 bg-stone-100 hover:bg-stone-200 text-stone-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer">
-                    <Camera size={16} /> Edit Photo
-                    <input type="file" accept="image/*" className="hidden" onChange={handleProfilePhotoUpload} disabled={isUploadingProfilePhoto} />
-                  </label>
-                </div>
-                
-                <div className="flex-1 space-y-5 w-full">
-                  <div className="p-4 bg-stone-50 rounded-lg border border-stone-100">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">Nama Lengkap</label>
-                    <p className="text-lg font-medium text-stone-900">{auth.currentUser?.displayName || 'Admin LPH'}</p>
-                  </div>
-                  <div className="p-4 bg-stone-50 rounded-lg border border-stone-100">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">Email</label>
-                    <p className="text-lg font-medium text-stone-900 break-all">{auth.currentUser?.email}</p>
-                  </div>
-                  <div className="p-4 bg-stone-50 rounded-lg border border-stone-100">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-stone-500 mb-1">Status Akun</label>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-sm"></div>
-                      <span className="text-sm font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-md">Aktif (Administrator)</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </div>

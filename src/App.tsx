@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import ProfilLembaga from './components/ProfilLembaga';
+import About from './components/About';
 import Services from './components/Services';
 import ProsesSertifikasi from './components/ProsesSertifikasi';
 import Regulasi from './components/Regulasi';
@@ -60,7 +60,7 @@ export default function App() {
       <AdminDashboard isAdmin={isAdmin} />
       <main>
         <Hero />
-        <ProfilLembaga />
+        <About />
         <Services />
         <ProsesSertifikasi />
         <Features />
