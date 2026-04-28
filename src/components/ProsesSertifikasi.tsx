@@ -1,4 +1,4 @@
-import { ClipboardList, Search, Gavel, Award } from 'lucide-react';
+import { ClipboardList, Search, Gavel, Award, Waypoints, Route } from 'lucide-react';
 
 const steps = [
   {
@@ -28,7 +28,7 @@ export default function ProsesSertifikasi() {
     <section className="py-20 lg:py-28 bg-white" id="proses">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-primary-700 font-semibold tracking-wider uppercase text-sm mb-3">Alur Sertifikasi</h2>
+          <h2 className="text-primary-700 font-semibold tracking-wider uppercase text-sm mb-3">Tinjauan Proses</h2>
           <h3 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 mb-6">
             Proses Sertifikasi Halal
           </h3>
@@ -37,7 +37,7 @@ export default function ProsesSertifikasi() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative mb-16">
           {/* Connecting line for desktop */}
           <div className="hidden lg:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-primary-100 z-0"></div>
           
@@ -55,6 +55,38 @@ export default function ProsesSertifikasi() {
               </p>
             </div>
           ))}
+        </div>
+
+        <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto mt-12 bg-stone-50 p-8 rounded-3xl border border-stone-100">
+          <div className="bg-white p-6 rounded-2xl flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5 shadow-sm border border-stone-100 hover:shadow-md transition-all group">
+            <div className="bg-primary-50 p-4 rounded-xl text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors duration-300">
+              <Waypoints size={28} />
+            </div>
+            <div>
+              <h4 className="text-lg font-bold text-stone-900 mb-2">Alur Sertifikasi</h4>
+              <p className="text-sm text-stone-600 mb-4">
+                Panduan diagram alur tahapan sertifikasi halal dari pendaftaran hingga selesai.
+              </p>
+              <button className="text-primary-600 font-semibold text-sm hover:text-primary-700 underline decoration-2 underline-offset-4 transition-colors">
+                Lihat Detail
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5 shadow-sm border border-stone-100 hover:shadow-md transition-all group">
+            <div className="bg-gold-50 p-4 rounded-xl text-gold-600 group-hover:bg-gold-500 group-hover:text-primary-900 transition-colors duration-300">
+              <Route size={28} />
+            </div>
+            <div>
+              <h4 className="text-lg font-bold text-stone-900 mb-2">Alur Layanan</h4>
+              <p className="text-sm text-stone-600 mb-4">
+                Dokumen Service Flow dan interaksi pelayanan lembaga dengan klien (pelaku usaha).
+              </p>
+              <button className="text-gold-600 font-semibold text-sm hover:text-gold-700 underline decoration-2 underline-offset-4 transition-colors">
+                Lihat Detail
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
