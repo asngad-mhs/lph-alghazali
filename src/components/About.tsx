@@ -3,36 +3,43 @@ import { motion } from 'motion/react';
 
 const profileFeatures = [
   {
+    id: "sejarah",
     icon: <History size={24} />,
     title: "Sejarah dan Latar Belakang",
     description: "Berawal dari ikhtiar luhur untuk membantu masyarakat dan pelaku usaha, LPH Al-Ghazali didirikan sebagai respon atas peningkatan skala kebutuhan industri akan jaminan produk halal yang kredibel."
   },
   {
+    id: "visi-misi",
     icon: <Target size={24} />,
     title: "Visi dan Misi",
     description: "Visi kami menjadi lembaga pemeriksa tepercaya. Misi kami memberikan layanan pemeriksaan berkualitas, edukasi berkesinambungan, serta pendampingan untuk semua level usaha."
   },
   {
+    id: "kebijakan",
     icon: <ShieldCheck size={24} />,
     title: "Kebijakan & Sasaran Mutu",
     description: "Berkomitmen pada pemenuhan standar mutu sertifikasi halal melalui continous improvement, dengan objektif kepuasan pelanggan, ketepatan waktu, dan zero complain atas pelayanan."
   },
   {
+    id: "struktur",
     icon: <Building size={24} />,
     title: "Struktur Organisasi",
     description: "Dikelola oleh susunan organisasi yang profesional, independen, dan transparan untuk memastikan seluruh alur pelayanan berjalan efektif tanpa adanya konflik kepentingan."
   },
   {
+    id: "auditor",
     icon: <UserCheck size={24} />,
     title: "Auditor Halal",
     description: "Didukung oleh Auditor Halal bersertifikat kompetensi, kredibel, dan menjunjung tinggi integritas untuk memastikan implementasi ketat Sistem Jaminan Produk Halal."
   },
   {
+    id: "sdm",
     icon: <BookOpen size={24} />,
     title: "SDM Syariah",
     description: "Dilengkapi pakar syariah/ahli agama Islam yang memiliki kepakaran mendalam terkait hukum syariat, fiqih kontemporer, serta fatwa-fatwa terbaru dari Majelis Ulama Indonesia."
   },
   {
+    id: "kerjasama",
     icon: <Handshake size={24} />,
     title: "Kerjasama",
     description: "Membangun sinergi kolaboratif bersama BPJPH, MUI, Universitas, dan asosiasi industri dalam rangka memperluas ekosistem industri halal nasional dan internasional."
@@ -129,11 +136,12 @@ export default function About() {
             {profileFeatures.map((feature, index) => (
               <motion.div 
                 key={index}
+                id={feature.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white p-6 rounded-2xl border border-stone-100 shadow-sm hover:shadow-md transition-all group flex flex-col items-start"
+                className="bg-white p-6 rounded-2xl border border-stone-100 shadow-sm hover:shadow-md transition-all group flex flex-col items-start scroll-mt-24"
               >
                 <div className="bg-primary-50 p-4 rounded-xl text-primary-600 mb-5 group-hover:bg-primary-600 group-hover:text-white transition-colors duration-300">
                   {feature.icon}

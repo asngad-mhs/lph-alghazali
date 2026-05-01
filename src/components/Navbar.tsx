@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog, ChevronDown } from 'lucide-react';
+import { Menu, X, ShieldCheck, Phone, MapPin, Mail, Send, UserCog, ChevronDown, History, Target, Building, UserCheck, BookOpen, Handshake } from 'lucide-react';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth, db, handleFirestoreError, OperationType } from '../firebase';
 
@@ -24,13 +24,41 @@ export default function Navbar() {
       name: 'Profil', 
       href: '#about',
       subLinks: [
-        { name: 'Sejarah dan Latar Belakang', href: '#about' },
-        { name: 'Visi dan Misi', href: '#about' },
-        { name: 'Kebijakan Mutu dan Sasaran Mutu', href: '#about' },
-        { name: 'Struktur Organisasi', href: '#about' },
-        { name: 'Auditor Halal', href: '#about' },
-        { name: 'SDM Syariah', href: '#about' },
-        { name: 'Kerjasama', href: '#about' },
+        { 
+          name: 'Sejarah dan Latar Belakang', 
+          href: '#sejarah', 
+          icon: <History size={18} />
+        },
+        { 
+          name: 'Visi dan Misi', 
+          href: '#visi-misi', 
+          icon: <Target size={18} />
+        },
+        { 
+          name: 'Kebijakan & Sasaran Mutu', 
+          href: '#kebijakan', 
+          icon: <ShieldCheck size={18} />
+        },
+        { 
+          name: 'Struktur Organisasi', 
+          href: '#struktur', 
+          icon: <Building size={18} />
+        },
+        { 
+          name: 'Auditor Halal', 
+          href: '#auditor', 
+          icon: <UserCheck size={18} />
+        },
+        { 
+          name: 'SDM Syariah', 
+          href: '#sdm', 
+          icon: <BookOpen size={18} />
+        },
+        { 
+          name: 'Kerjasama', 
+          href: '#kerjasama', 
+          icon: <Handshake size={18} />
+        },
       ]
     },
     { name: 'Proses Sertifikasi', href: '#proses' },
@@ -91,9 +119,14 @@ export default function Navbar() {
                         <a 
                           key={subLink.name} 
                           href={subLink.href} 
-                          className="block px-5 py-2.5 text-sm text-stone-700 hover:bg-gold-50 hover:text-primary-700 transition-colors"
+                          className="flex items-center gap-3 px-5 py-3 hover:bg-gold-50 hover:text-primary-700 transition-colors group/sub text-stone-700"
                         >
-                          {subLink.name}
+                          {subLink.icon && (
+                            <div className="flex-shrink-0 text-primary-600 transition-colors">
+                              {subLink.icon}
+                            </div>
+                          )}
+                          <span className="block text-sm font-semibold transition-colors">{subLink.name}</span>
                         </a>
                       ))}
                     </div>
@@ -174,15 +207,20 @@ export default function Navbar() {
                       <ChevronDown size={18} className={`transform transition-transform ${openMobileDropdown === link.name ? 'rotate-180' : ''}`} />
                     </button>
                     {openMobileDropdown === link.name && (
-                      <div className="pl-6 pr-3 py-2 space-y-1 bg-stone-50 rounded-md mt-1 mb-2">
+                      <div className="pl-6 pr-3 py-2 space-y-2 bg-stone-50 rounded-md mt-1 mb-2">
                         {link.subLinks.map(subLink => (
                           <a
                             key={subLink.name}
                             href={subLink.href}
-                            className="block px-3 py-2.5 text-sm font-medium text-stone-600 hover:text-primary-700 hover:bg-white rounded-md"
+                            className="flex items-center gap-3 px-3 py-2.5 hover:bg-white rounded-md transition-colors text-stone-600 hover:text-primary-700"
                             onClick={() => setIsMobileMenuOpen(false)}
                           >
-                            {subLink.name}
+                            {subLink.icon && (
+                              <div className="flex-shrink-0">
+                                {subLink.icon}
+                              </div>
+                            )}
+                            <span className="block text-sm font-medium">{subLink.name}</span>
                           </a>
                         ))}
                       </div>
