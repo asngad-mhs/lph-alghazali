@@ -13,6 +13,7 @@ export default function Footer() {
                 src="https://data.asngad.my.id/logo-lph.jpeg" 
                 alt="Logo LPH Al-Ghazali" 
                 className="h-12 w-auto object-contain rounded-md"
+                referrerPolicy="no-referrer"
               />
               <div>
                 <h2 className="font-serif font-bold text-xl text-white leading-tight">
