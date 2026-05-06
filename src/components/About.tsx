@@ -1,52 +1,62 @@
-import { BookOpen, Users, Award, History, Target, ShieldCheck, Building, UserCheck, Handshake, ChevronRight } from 'lucide-react';
-import { motion } from 'motion/react';
+import { BookOpen, Users, Award, History, Target, ShieldCheck, Building, UserCheck, Handshake, ChevronRight, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { useState } from 'react';
 
 const profileFeatures = [
   {
     id: "sejarah",
     icon: <History size={24} />,
     title: "Sejarah dan Latar Belakang",
-    description: "Berawal dari ikhtiar luhur untuk membantu masyarakat dan pelaku usaha, LPH Al-Ghazali didirikan sebagai respon atas peningkatan skala kebutuhan industri akan jaminan produk halal yang kredibel."
+    description: "Berawal dari ikhtiar luhur untuk membantu masyarakat dan pelaku usaha, LPH Al-Ghazali didirikan sebagai respon atas peningkatan skala kebutuhan industri akan jaminan produk halal yang kredibel.",
+    fullDescription: "LPH Al-Ghazali didirikan sebagai wujud nyata dari upaya kami untuk mendukung terwujudnya ekosistem halal di Indonesia. Berangkat dari kesadaran akan pentingnya kejelasan status kehalalan sebuah produk bagi masyarakat yang mayoritas Muslim, dan juga sebagai sarana edukasi yang berkelanjutan. Kami menyadari bahwa tantangan terbesar bagi pelaku usaha, terutama UMKM, adalah kurangnya akses dan pemahaman tentang standar kehalalan. Oleh karena itu, LPH Al-Ghazali hadir tidak hanya sebagai lembaga pemeriksa, namun juga mitra strategis untuk membimbing dan memberikan literasi mengenai Jaminan Produk Halal secara komprehensif."
   },
   {
     id: "visi-misi",
     icon: <Target size={24} />,
     title: "Visi dan Misi",
-    description: "Visi kami menjadi lembaga pemeriksa tepercaya. Misi kami memberikan layanan pemeriksaan berkualitas, edukasi berkesinambungan, serta pendampingan untuk semua level usaha."
+    description: "Visi kami menjadi lembaga pemeriksa tepercaya. Misi kami memberikan layanan pemeriksaan berkualitas, edukasi berkesinambungan, serta pendampingan untuk semua level usaha.",
+    fullDescription: "Visi LPH Al-Ghazali: Menjadi Lembaga Pemeriksa Halal yang tepercaya, kredibel, dan berkontribusi aktif dalam mewujudkan ekosistem industri halal global.\n\nMisi LPH Al-Ghazali:\n1. Menyediakan layanan pemeriksaan yang berkualitas, independen, dan sesuai standar.\n2. Mengedukasi masyarakat dan pelaku usaha mengenai pentingnya ekosistem halal.\n3. Memberikan pendampingan terstruktur khususnya bagi UMKM untuk naik kelas melalui Sertifikasi Halal.\n4. Mendorong transparansi dan inovasi berkelanjutan dalam setiap aspek operasional."
   },
   {
     id: "kebijakan",
     icon: <ShieldCheck size={24} />,
     title: "Kebijakan & Sasaran Mutu",
-    description: "Berkomitmen pada pemenuhan standar mutu sertifikasi halal melalui continous improvement, dengan objektif kepuasan pelanggan, ketepatan waktu, dan zero complain atas pelayanan."
+    description: "Berkomitmen pada pemenuhan standar mutu sertifikasi halal melalui continous improvement, dengan objektif kepuasan pelanggan, ketepatan waktu, dan zero complain atas pelayanan.",
+    fullDescription: "LPH Al-Ghazali mengimplementasikan kebijakan mutu yang sangat ketat untuk menjamin transparansi, akuntabilitas, dan kepastian hukum syariat. Sasaran mutu kami dirancang untuk memastikan bahwa:\n• 100% proses audit dilakukan sesuai dengan prosedur dan etika yang berlaku.\n• Waktu pemeriksaan dan pemrosesan dokumen dari awal sampai laporan diserahkan ke MUI tepat waktu (SLA terukur).\n• Zero complain dalam hal pelayanan pelanggan dan transparansi pengajuan.\n• Pembaruan kompetensi staf dan auditor secara periodik dalam menghadapi perkembangan industri dan fiqih kontemporer."
   },
   {
     id: "struktur",
     icon: <Building size={24} />,
     title: "Struktur Organisasi",
-    description: "Dikelola oleh susunan organisasi yang profesional, independen, dan transparan untuk memastikan seluruh alur pelayanan berjalan efektif tanpa adanya konflik kepentingan."
+    description: "Dikelola oleh susunan organisasi yang profesional, independen, dan transparan untuk memastikan seluruh alur pelayanan berjalan efektif tanpa adanya konflik kepentingan.",
+    fullDescription: "Organisasi LPH Al-Ghazali dibangun dengan asas profesionalisme dan independensi yang tinggi untuk meniadakan konflik kepentingan (conflict of interest). Struktur organisasi terdiri dari Manajemen Puncak (Direktur), Manajer Mutu, Manajer Administrasi, dan Tim Auditor Halal.\n\nSetiap posisi memegang peranan penuh dalam memastikan ketepatan pengambilan keputusan dan objektivitas saat melakukan penilaian sertifikasi. Tim Puncak terpisah dari tim Audit dan memberikan fungsi pengawasan penuh atas jalannya standar operasional prosedural (SOP)."
   },
   {
     id: "auditor",
     icon: <UserCheck size={24} />,
     title: "Auditor Halal",
-    description: "Didukung oleh Auditor Halal bersertifikat kompetensi, kredibel, dan menjunjung tinggi integritas untuk memastikan implementasi ketat Sistem Jaminan Produk Halal."
+    description: "Didukung oleh Auditor Halal bersertifikat kompetensi, kredibel, dan menjunjung tinggi integritas untuk memastikan implementasi ketat Sistem Jaminan Produk Halal.",
+    fullDescription: "Auditor Halal di LPH Al-Ghazali adalah tenaga ahli yang telah lulus uji kompetensi dari Badan Penyelenggara Jaminan Produk Halal (BPJPH) dan MUI. Mereka memiliki latar belakang pendidikan linier (seperti teknologi pangan, biologi, kimia, atau pertanian) dan terus melakukan pengembangan kompetensi teknis melalui pelatihan tahunan.\n\nPeran auditor mencakup penilaian bahan baku, observasi proses produksi, verifikasi fasilitas, dan memastikan tidak ada kontaminasi silang (cross-contamination) dengan bahan non-halal/najis."
   },
   {
     id: "sdm",
     icon: <BookOpen size={24} />,
     title: "SDM Syariah",
-    description: "Dilengkapi pakar syariah/ahli agama Islam yang memiliki kepakaran mendalam terkait hukum syariat, fiqih kontemporer, serta fatwa-fatwa terbaru dari Majelis Ulama Indonesia."
+    description: "Dilengkapi pakar syariah/ahli agama Islam yang memiliki kepakaran mendalam terkait hukum syariat, fiqih kontemporer, serta fatwa-fatwa terbaru dari Majelis Ulama Indonesia.",
+    fullDescription: "SDM Syariah kami terdiri dari para asatidz dan ulama yang lulus dari universitas terkemuka dengan konsentrasi Ilmu Fiqih, Syariah, maupun Ushuluddin. Mereka bertugas menjaga keselarasan antara inovasi di bidang teknologi pangan dengan kaidah-kaidah hukum Islam yang fundamental dan fatwa-fatwa MUI.\n\nMereka sangat diperlukan terutama pada audit titik kritis yang melibatkan penyembelihan, produk turunan hewani, fermentasi, dan unsur komputasi genetika yang semakin rumit."
   },
   {
     id: "kerjasama",
     icon: <Handshake size={24} />,
     title: "Kerjasama",
-    description: "Membangun sinergi kolaboratif bersama BPJPH, MUI, Universitas, dan asosiasi industri dalam rangka memperluas ekosistem industri halal nasional dan internasional."
+    description: "Membangun sinergi kolaboratif bersama BPJPH, MUI, Universitas, dan asosiasi industri dalam rangka memperluas ekosistem industri halal nasional dan internasional.",
+    fullDescription: "Untuk memperkuat infrastruktur halal, LPH Al-Ghazali aktif menjalin kemitraan strategis:\n• Dengan BPJPH sebagai otoritas regluasi.\n• Dengan Komisi Fatwa MUI untuk otoritas hukum penetapan kehalalan.\n• Dengan perguruan tinggi negeri maupun swasta sebagai pusat riset, literasi, dan pengembangan teknologi pemeriksaan yang akurat.\n• Bersama asosiasi pengusaha dan UMKM untuk melaksanakan event literasi, pelatihan penyelia halal secara massal, dan coaching clinic."
   }
 ];
 
 export default function About() {
+  const [selectedFeature, setSelectedFeature] = useState<typeof profileFeatures[0] | null>(null);
+
   return (
     <section className="py-20 lg:py-28 bg-stone-50" id="about">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -150,7 +160,10 @@ export default function About() {
                 <p className="text-sm text-stone-600 leading-relaxed mb-4 flex-grow">
                   {feature.description}
                 </p>
-                <button className="flex items-center text-primary-600 font-semibold text-sm hover:text-primary-700 mt-auto group-hover:translate-x-1 transition-transform">
+                <button 
+                  onClick={() => setSelectedFeature(feature)}
+                  className="flex items-center text-primary-600 font-semibold text-sm hover:text-primary-700 mt-auto group-hover:translate-x-1 transition-transform"
+                >
                   Selengkapnya <ChevronRight size={16} className="ml-1" />
                 </button>
               </motion.div>
@@ -158,6 +171,62 @@ export default function About() {
           </div>
         </div>
       </div>
+
+      {/* Modal for Feature Details */}
+      <AnimatePresence>
+        {selectedFeature && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm"
+              onClick={() => setSelectedFeature(null)}
+            />
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
+            >
+              <div className="flex items-center justify-between p-6 border-b border-stone-100">
+                <div className="flex items-center gap-4">
+                  <div className="bg-primary-50 p-3 rounded-xl text-primary-600">
+                    {selectedFeature.icon}
+                  </div>
+                  <h3 className="text-2xl font-serif font-bold text-stone-900">
+                    {selectedFeature.title}
+                  </h3>
+                </div>
+                <button 
+                  onClick={() => setSelectedFeature(null)}
+                  className="p-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full transition-colors flex-shrink-0"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              
+              <div className="p-6 md:p-8 overflow-y-auto">
+                <div className="prose prose-stone leading-relaxed">
+                  {selectedFeature.fullDescription.split('\n').map((paragraph, idx) => (
+                    <p key={idx} className="mb-4 text-stone-700">{paragraph}</p>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="p-6 border-t border-stone-100 bg-stone-50 flex justify-end">
+                <button 
+                  onClick={() => setSelectedFeature(null)}
+                  className="px-6 py-2.5 bg-primary-700 hover:bg-primary-800 text-white font-medium rounded-lg transition-colors"
+                >
+                  Tutup
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

@@ -1,4 +1,6 @@
-import { ClipboardList, Search, Gavel, Award, Waypoints, Route } from 'lucide-react';
+import { ClipboardList, Search, Gavel, Award, Waypoints, Route, X, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 
 const steps = [
   {
@@ -23,7 +25,51 @@ const steps = [
   }
 ];
 
+const detailContents = {
+  alurSertifikasi: {
+    title: "Alur Sertifikasi Halal Reguler",
+    icon: <Waypoints size={32} className="text-primary-600" />,
+    content: (
+      <div className="space-y-4 text-stone-700 leading-relaxed text-sm md:text-base">
+        <p>Prosedur sertifikasi halal mengikuti alur baku yang ditetapkan oleh BPJPH dengan estimasi SLA (Service Level Agreement) berdasarkan tingkat kompleksitas produk yang diajukan.</p>
+        
+        <h4 className="font-bold text-lg text-primary-900 mt-4">Tahapan Utama:</h4>
+        <ol className="list-decimal pl-5 space-y-2">
+          <li><strong>Pembuatan Akun SIHALAL:</strong> Pelaku usaha membuat akun, mengunggah Surat Izin Usaha, KTP, dan NIB.</li>
+          <li><strong>Pengajuan Pendaftaran:</strong> Memasukkan data bahan baku, proses produksi, serta matrik produk, sekaligus menunjuk LPH Al-Ghazali.</li>
+          <li><strong>Verifikasi Dokumen:</strong> Admin mengecek kelengkapan persyaratan dan melakukan evaluasi kesiapan.</li>
+          <li><strong>Perhitungan Biaya (Invoice):</strong> BPJPH akan merilis otomatis invoice setelah disetujui LPH.</li>
+          <li><strong>Penjadwalan Auditor:</strong> Setelah pembayaran dikonfirmasi, dijadwalkan audit.</li>
+          <li><strong>Pelaksanaan Audit:</strong> Pemeriksaan menyeluruh, dan laporan diteruskan ke Komisi Fatwa MUI.</li>
+          <li><strong>Ketetapan Halal MUI:</strong> Keputusan sidang komisi fatwa disampaikan ke BPJPH.</li>
+          <li><strong>Penerbitan Sertifikat:</strong> Pelaku usaha mengunduh sertifikat halal di akun.</li>
+        </ol>
+      </div>
+    )
+  },
+  alurLayanan: {
+    title: "Alur Layanan LPH Al-Ghazali",
+    icon: <Route size={32} className="text-gold-600" />,
+    content: (
+      <div className="space-y-4 text-stone-700 leading-relaxed text-sm md:text-base">
+        <p>Alur layanan secara tatap muka maupun digital dari LPH Al-Ghazali dalam membantu proses klien.</p>
+        
+        <h4 className="font-bold text-lg text-primary-900 mt-4">Tahapan Layanan Kami:</h4>
+        <ul className="list-disc pl-5 space-y-2">
+          <li><strong>Konsultasi Pra-Audit:</strong> Diskusi awal untuk penentuan tingkat kesiapan dan pemahaman pemohon.</li>
+          <li><strong>Review Kelengkapan:</strong> Tim LPH memvalidasi kelengkapan awal dokumen SIHALAL sebelum disubmit.</li>
+          <li><strong>Audit Pendahuluan (Optional):</strong> Untuk perusahaan besar, kami menyarankan evaluasi celah untuk memastikan zero finding saat audit.</li>
+          <li><strong>Komunikasi Proaktif:</strong> Sepanjang proses audit hingga penerbitan laporan dikomunikasikan secara berkala.</li>
+          <li><strong>Penanganan Ketidaksesuaian:</strong> LPH memberikan waktu perbaikan (CAR) dengan pendampingan.</li>
+        </ul>
+      </div>
+    )
+  }
+};
+
 export default function ProsesSertifikasi() {
+  const [modalContent, setModalContent] = useState<keyof typeof detailContents | null>(null);
+
   return (
     <section className="py-20 lg:py-28 bg-white" id="proses">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,8 +113,11 @@ export default function ProsesSertifikasi() {
               <p className="text-sm text-stone-600 mb-4">
                 Panduan diagram alur tahapan sertifikasi halal dari pendaftaran hingga selesai.
               </p>
-              <button className="text-primary-600 font-semibold text-sm hover:text-primary-700 underline decoration-2 underline-offset-4 transition-colors">
-                Lihat Detail
+              <button 
+                onClick={() => setModalContent('alurSertifikasi')}
+                className="text-primary-600 font-semibold text-sm hover:text-primary-700 underline decoration-2 underline-offset-4 transition-colors flex items-center"
+              >
+                Lihat Detail <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
           </div>
@@ -82,13 +131,70 @@ export default function ProsesSertifikasi() {
               <p className="text-sm text-stone-600 mb-4">
                 Dokumen Service Flow dan interaksi pelayanan lembaga dengan klien (pelaku usaha).
               </p>
-              <button className="text-gold-600 font-semibold text-sm hover:text-gold-700 underline decoration-2 underline-offset-4 transition-colors">
-                Lihat Detail
+              <button 
+                onClick={() => setModalContent('alurLayanan')}
+                className="text-gold-600 font-semibold text-sm hover:text-gold-700 underline decoration-2 underline-offset-4 transition-colors flex items-center"
+              >
+                Lihat Detail <ChevronRight size={16} className="ml-1" />
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal Details */}
+      <AnimatePresence>
+        {modalContent && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-stone-900/60 backdrop-blur-sm"
+              onClick={() => setModalContent(null)}
+            />
+            
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
+            >
+              <div className="flex items-center justify-between p-6 border-b border-stone-100">
+                <div className="flex items-center gap-4">
+                  <div className="bg-stone-50 p-3 rounded-xl">
+                    {detailContents[modalContent].icon}
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-serif font-bold text-stone-900">
+                    {detailContents[modalContent].title}
+                  </h3>
+                </div>
+                <button 
+                  onClick={() => setModalContent(null)}
+                  className="p-2 bg-stone-100 hover:bg-stone-200 text-stone-600 rounded-full transition-colors flex-shrink-0"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              
+              <div className="p-6 md:p-8 overflow-y-auto">
+                <div className="prose prose-stone max-w-none">
+                  {detailContents[modalContent].content}
+                </div>
+              </div>
+              
+              <div className="p-6 border-t border-stone-100 bg-stone-50 flex justify-end">
+                <button 
+                  onClick={() => setModalContent(null)}
+                  className="px-6 py-2.5 bg-primary-700 hover:bg-primary-800 text-white font-medium rounded-lg transition-colors"
+                >
+                  Tutup
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

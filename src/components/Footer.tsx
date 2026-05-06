@@ -8,10 +8,12 @@ export default function Footer() {
           
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="bg-primary-700 text-white p-2 rounded-lg">
-                <ShieldCheck size={28} />
-              </div>
+            <div className="flex items-center gap-3 mb-6">
+              <img 
+                src="https://data.asngad.my.id/logo-lph.jpeg" 
+                alt="Logo LPH Al-Ghazali" 
+                className="h-12 w-auto object-contain rounded-md"
+              />
               <div>
                 <h2 className="font-serif font-bold text-xl text-white leading-tight">
                   LPH Al-Ghazali
@@ -74,7 +76,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={20} className="text-primary-500 flex-shrink-0" />
-                <span className="text-sm">+62 813-2778-2079</span>
+                <span className="text-sm">+62 850-2494-252</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={20} className="text-primary-500 flex-shrink-0" />
