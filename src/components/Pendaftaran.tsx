@@ -27,7 +27,7 @@ export default function Pendaftaran() {
         createdAt: serverTimestamp()
       });
 
-      const adminPhone = "628502494252";
+      const adminPhone = "6285802494252";
       const subjectMap: Record<string, string> = {
         sertifikasi: "Pendaftaran Sertifikasi Halal",
         pelatihan: "Informasi Pelatihan Penyelia Halal",
@@ -80,7 +80,7 @@ export default function Pendaftaran() {
                     </div>
                     <div>
                       <p className="text-xs text-primary-300 uppercase tracking-wider font-semibold mb-1">Telepon / WhatsApp</p>
-                      <p className="font-semibold text-lg">+62 850-2494-252</p>
+                      <p className="font-semibold text-lg">+62 858-0249-4252</p>
                     </div>
                   </div>
 
