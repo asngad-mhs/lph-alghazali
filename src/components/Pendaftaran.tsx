@@ -11,10 +11,83 @@ export default function Pendaftaran() {
     subject: ''
   });
 
+  const [errors, setErrors] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    subject: ''
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    // Allows optional + at start, spaces, dashes and numbers. Evaluates to true if 10-15 digits long (roughly)
+    const re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+    return re.test(phone) || phone.replace(/\D/g, '').length >= 10;
+  };
+
+  const handleBlur = (field: string) => {
+    setTouched(prev => ({ ...prev, [field]: true }));
+    validateField(field, formData[field as keyof typeof formData]);
+  };
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (touched[field]) {
+      validateField(field, value);
+    }
+  };
+
+  const validateField = (field: string, value: string) => {
+    let error = '';
+    switch (field) {
+      case 'name':
+        if (!value.trim()) error = 'Nama Lengkap wajib diisi';
+        else if (value.trim().length < 3) error = 'Nama terlalu pendek';
+        break;
+      case 'phone':
+        if (!value.trim()) error = 'No. Telepon / WhatsApp wajib diisi';
+        else if (!validatePhone(value)) error = 'Format No. Telepon tidak valid';
+        break;
+      case 'email':
+        if (!value.trim()) error = 'Alamat email wajib diisi';
+        else if (!validateEmail(value)) error = 'Format email tidak valid';
+        break;
+      case 'subject':
+        if (!value) error = 'Keperluan layanan wajib dipilih';
+        break;
+    }
+    setErrors(prev => ({ ...prev, [field]: error }));
+    return error === '';
+  };
 
   const handleWhatsAppSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate all fields
+    const isNameValid = validateField('name', formData.name);
+    const isPhoneValid = validateField('phone', formData.phone);
+    const isEmailValid = validateField('email', formData.email);
+    const isSubjectValid = validateField('subject', formData.subject);
+
+    // Mark all as touched
+    setTouched({
+      name: true,
+      phone: true,
+      email: true,
+      subject: true
+    });
+
+    if (!isNameValid || !isPhoneValid || !isEmailValid || !isSubjectValid) {
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
@@ -125,10 +198,12 @@ export default function Pendaftaran() {
                     id="name" 
                     required
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                    onChange={(e) => handleChange('name', e.target.value)}
+                    onBlur={() => handleBlur('name')}
+                    className={`w-full px-4 py-3 rounded-xl border ${errors.name ? 'border-red-500 focus:ring-red-200' : 'border-stone-200 focus:border-primary-500 focus:ring-primary-200'} focus:ring-2 outline-none transition-all`}
                     placeholder="Contoh: Budi Santoso / PT Pangan Sejahtera"
                   />
+                  {errors.name && touched.name && <p className="mt-1.5 text-sm text-red-500">{errors.name}</p>}
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -139,10 +214,12 @@ export default function Pendaftaran() {
                       id="phone" 
                       required
                       value={formData.phone}
-                      onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                      onChange={(e) => handleChange('phone', e.target.value)}
+                      onBlur={() => handleBlur('phone')}
+                      className={`w-full px-4 py-3 rounded-xl border ${errors.phone ? 'border-red-500 focus:ring-red-200' : 'border-stone-200 focus:border-primary-500 focus:ring-primary-200'} focus:ring-2 outline-none transition-all`}
                       placeholder="Contoh: 08123456789"
                     />
+                    {errors.phone && touched.phone && <p className="mt-1.5 text-sm text-red-500">{errors.phone}</p>}
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-semibold text-stone-700 mb-2">Alamat Email</label>
@@ -151,10 +228,12 @@ export default function Pendaftaran() {
                       id="email" 
                       required
                       value={formData.email}
-                      onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all"
+                      onChange={(e) => handleChange('email', e.target.value)}
+                      onBlur={() => handleBlur('email')}
+                      className={`w-full px-4 py-3 rounded-xl border ${errors.email ? 'border-red-500 focus:ring-red-200' : 'border-stone-200 focus:border-primary-500 focus:ring-primary-200'} focus:ring-2 outline-none transition-all`}
                       placeholder="Contoh: email@perusahaan.com"
                     />
+                    {errors.email && touched.email && <p className="mt-1.5 text-sm text-red-500">{errors.email}</p>}
                   </div>
                 </div>
 
@@ -164,8 +243,9 @@ export default function Pendaftaran() {
                     id="subject"
                     required
                     value={formData.subject}
-                    onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 outline-none transition-all bg-white"
+                    onChange={(e) => handleChange('subject', e.target.value)}
+                    onBlur={() => handleBlur('subject')}
+                    className={`w-full px-4 py-3 rounded-xl border ${errors.subject ? 'border-red-500 focus:ring-red-200' : 'border-stone-200 focus:border-primary-500 focus:ring-primary-200'} focus:ring-2 outline-none transition-all bg-white`}
                   >
                     <option value="" disabled>-- Pilih salah satu --</option>
                     <option value="sertifikasi">Pendaftaran Sertifikasi Halal</option>
@@ -173,6 +253,7 @@ export default function Pendaftaran() {
                     <option value="konsultasi">Konsultasi Umum</option>
                     <option value="lainnya">Lainnya</option>
                   </select>
+                  {errors.subject && touched.subject && <p className="mt-1.5 text-sm text-red-500">{errors.subject}</p>}
                 </div>
 
                 <div className="pt-4 border-t border-stone-100">
